@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from decouple import config
 import csv
 
-dirt_dict = {}
+# dirt_dict = {}
 dirt_list = []
 pCd_list = []
 dirt_Cd_list = []
@@ -29,12 +29,12 @@ for dirt in dirt_list: # 감독명으로 영화인목록 리스트 추출
     for dirt_d in dirt_data['peopleListResult']['peopleList']: # 영화인목록에서 감독만 추출
         if dirt_d['repRoleNm'] == '감독':
             # dirt_dict[dirt_d['peopleCd']] = dirt_d # dirt_dict에 감독만 저장
-            dirt_Cd_list += dirt_d['peopleCd'] # 감독 코드 리스트 생성
+            dirt_Cd_list.append(dirt_d['peopleCd']) # 감독 코드 리스트 생성
 
 
 
 for pCd in dirt_Cd_list:
-    peopleCd = dirt
+    peopleCd = pCd
     key = config('API_KEY')
     base_url = 'http://www.kobis.or.kr/kobisopenapi/webservice/rest/people/searchPeopleInfo.json?'
     api_url = f'{base_url}&key={key}&peopleCd={peopleCd}'
@@ -52,6 +52,7 @@ for pCd in dirt_Cd_list:
         dirtInfo_List[data["peopleInfoResult"]["peopleInfo"]['peopleNm']] = need_data
     except:
         pass
+
 with open('director.csv', 'w', newline = '',  encoding = 'utf-8') as f:
     # 저장할 필드의 이름을 미리 지정한다.
     fieldnames = ('directorCd', 'directorNm', 'repRoleNm', 'filmos')
